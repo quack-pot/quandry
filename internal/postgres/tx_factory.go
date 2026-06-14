@@ -10,6 +10,8 @@ import (
 type PostgresTx struct {
 	tx  pgx.Tx
 	ctx context.Context
+
+	db *PostgresDatabase
 }
 
 func (tx *PostgresTx) Commit() error {
@@ -18,6 +20,21 @@ func (tx *PostgresTx) Commit() error {
 
 func (tx *PostgresTx) Rollback() {
 	tx.tx.Rollback(tx.ctx) // Error ignored here since Rollback is error handling from user POV
+}
+
+func (tx *PostgresTx) Save() error {
+	if err := tx.tx.Commit(tx.ctx); err != nil {
+		tx.tx.Rollback(tx.ctx)
+		return err
+	}
+
+	new_tx, err := tx.db.connections_pool.BeginTx(tx.ctx, pgx.TxOptions{})
+	if err != nil {
+		return err
+	}
+
+	tx.tx = new_tx
+	return nil
 }
 
 func (db *PostgresDatabase) NewTx(ctx context.Context) (core.IDbTransaction, error) {
@@ -33,6 +50,8 @@ func (db *PostgresDatabase) NewTx(ctx context.Context) (core.IDbTransaction, err
 	return &PostgresTx{
 		tx:  tx,
 		ctx: ctx,
+
+		db: db,
 	}, nil
 }
 

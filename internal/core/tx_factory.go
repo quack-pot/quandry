@@ -3,7 +3,9 @@ package core
 import "context"
 
 type IQueryable interface {
-	/** TODO: Add identifying methods here! */
+	// Commits the current transaction (performs rollback on
+	// failure to commit) and begins a new internal transaction.
+	Save() error
 }
 
 type IDbTransaction interface {
