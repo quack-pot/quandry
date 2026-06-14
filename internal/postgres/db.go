@@ -6,9 +6,13 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/quack-pot/quandry/internal/core"
+	"github.com/quack-pot/quandry/internal/schema"
 )
 
 type PostgresDatabase struct {
+	dialect  core.ISqlDialect
+	registry *schema.SchemaRegistry
+
 	connections_pool *pgxpool.Pool
 }
 
@@ -46,9 +50,18 @@ func NewPostgresDatabase(
 		return nil, err
 	}
 
+	dialect := NewDialect()
+
 	return &PostgresDatabase{
+		dialect:  dialect,
+		registry: schema.NewSchemaRegistry(dialect),
+
 		connections_pool: db_pool,
 	}, nil
+}
+
+func (db *PostgresDatabase) RegisterTable(models ...any) {
+	db.registry.Register(models...)
 }
 
 func (db *PostgresDatabase) Close() error {

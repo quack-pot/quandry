@@ -1,6 +1,6 @@
 package schema
 
-type Constraint interface {
+type IConstraint interface {
 	Constrain(*ColumnMeta)
 }
 
@@ -54,7 +54,7 @@ func (Computed) Constrain(meta *ColumnMeta) {}
 
 // Constraints ----------------------------------------------------------------
 
-type Constraints[A Constraint, B Constraint] struct{}
+type Constraints[A IConstraint, B IConstraint] struct{}
 
 func (Constraints[A, B]) Constrain(meta *ColumnMeta) {
 	var constraintA A
@@ -66,4 +66,4 @@ func (Constraints[A, B]) Constrain(meta *ColumnMeta) {
 
 // PrimaryKeyAuto -------------------------------------------------------------
 
-type PrimaryKeyAuto Constraints[PrimaryKey, AutoIncrement]
+type PrimaryKeyAuto = Constraints[PrimaryKey, AutoIncrement]
