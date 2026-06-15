@@ -1,6 +1,10 @@
 package core
 
 type ISqlDialect interface {
+	ArgPlaceholder(arg_number uint) string
+
+	Limit(count uint) string
+
 	IntType() string
 	SmallIntType() string
 	BigIntType() string
