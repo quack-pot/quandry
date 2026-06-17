@@ -9,62 +9,62 @@ type IColumnType interface {
 	ApplyConstraints(meta *ColumnMeta)
 }
 
-type ColumnType[T any, C IConstraint] struct {
+type ColumnType[Owner any, T any, C IConstraint] struct {
 	IColumnType
 }
 
-func (ColumnType[T, C]) ApplyConstraints(meta *ColumnMeta) {
+func (ColumnType[Owner, T, C]) ApplyConstraints(meta *ColumnMeta) {
 	var constraint C
 	constraint.Constrain(meta)
 }
 
-func (ColumnType[T, C]) SqlType(dialect core.ISqlDialect) string {
+func (ColumnType[Owner, T, C]) SqlType(dialect core.ISqlDialect) string {
 	return SqlTypeStringFor[T](dialect)
 }
 
 // Integer Columns ------------------------------------------------------------
 
-type IntColumn[C IConstraint] = ColumnType[SqlInt, C]
-type SmallIntColumn[C IConstraint] = ColumnType[SqlSmallInt, C]
-type BigIntColumn[C IConstraint] = ColumnType[SqlBigInt, C]
+type IntColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlInt, C]
+type SmallIntColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlSmallInt, C]
+type BigIntColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlBigInt, C]
 
 // Decimal Columns ------------------------------------------------------------
 
-type FloatColumn[C IConstraint] = ColumnType[SqlFloat, C]
-type DoubleColumn[C IConstraint] = ColumnType[SqlDouble, C]
+type FloatColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlFloat, C]
+type DoubleColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlDouble, C]
 
 // Monetary Columns -----------------------------------------------------------
 
-type MoneyColumn[C IConstraint] = ColumnType[SqlMoney, C]
+type MoneyColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlMoney, C]
 
 // Boolean Columns ------------------------------------------------------------
 
-type BooleanColumn[C IConstraint] = ColumnType[SqlBoolean, C]
+type BooleanColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlBoolean, C]
 
 // Character Columns ----------------------------------------------------------
 
-type TextColumn[C IConstraint] = ColumnType[SqlText, C]
+type TextColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlText, C]
 
 // Time Columns ---------------------------------------------------------------
 
-type DateColumn[C IConstraint] = ColumnType[SqlDate, C]
-type TimeColumn[C IConstraint] = ColumnType[SqlTime, C]
-type DateTimeColumn[C IConstraint] = ColumnType[SqlDateTime, C]
-type DateTimeZoneColumn[C IConstraint] = ColumnType[SqlDateTimeZone, C]
-type IntervalColumn[C IConstraint] = ColumnType[SqlInterval, C]
+type DateColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlDate, C]
+type TimeColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlTime, C]
+type DateTimeColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlDateTime, C]
+type DateTimeZoneColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlDateTimeZone, C]
+type IntervalColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlInterval, C]
 
 // Json Columns ---------------------------------------------------------------
 
-type JsonColumn[C IConstraint] = ColumnType[SqlJson, C]
-type JsonBinaryColumn[C IConstraint] = ColumnType[SqlJsonBinary, C]
+type JsonColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlJson, C]
+type JsonBinaryColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlJsonBinary, C]
 
 // Network Columns ------------------------------------------------------------
 
-type CidrColumn[C IConstraint] = ColumnType[SqlCidr, C]
-type INetColumn[C IConstraint] = ColumnType[SqlINet, C]
-type MacAddress6Column[C IConstraint] = ColumnType[SqlMacAddress6, C]
-type MacAddress8Column[C IConstraint] = ColumnType[SqlMacAddress8, C]
+type CidrColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlCidr, C]
+type INetColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlINet, C]
+type MacAddress6Column[Owner any, C IConstraint] = ColumnType[Owner, SqlMacAddress6, C]
+type MacAddress8Column[Owner any, C IConstraint] = ColumnType[Owner, SqlMacAddress8, C]
 
 // UUID Columns ---------------------------------------------------------------
 
-type UuidColumn[C IConstraint] = ColumnType[SqlUuid, C]
+type UuidColumn[Owner any, C IConstraint] = ColumnType[Owner, SqlUuid, C]

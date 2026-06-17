@@ -1,11 +1,25 @@
 package postgres
 
-import "github.com/quack-pot/quandry/internal/core"
+import (
+	"strconv"
+
+	"github.com/quack-pot/quandry/internal/core"
+)
 
 type PostgresDialect struct{}
 
 func NewDialect() core.ISqlDialect {
 	return PostgresDialect{}
+}
+
+func (PostgresDialect) ArgPlaceholder(arg_number uint) string {
+	number_str := strconv.FormatUint(uint64(arg_number), 10)
+	return "$" + number_str
+}
+
+func (PostgresDialect) Limit(count uint) string {
+	number_str := strconv.FormatUint(uint64(count), 10)
+	return "LIMIT " + number_str
 }
 
 func (PostgresDialect) IntType() string          { return "INTEGER" }
